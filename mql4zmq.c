@@ -29,7 +29,7 @@
 */
 
 // Include the original libzmq header file.
-#include "../../../include/zmq.h"
+#include "zmq.h"
 
 // Handle DSO symbol visibility. This is already defined in zmq.h, but we set it here again to protect against future changes to Microsoft Visual C++ detection methods.
 #define ZMQ_EXPORT __declspec(dllexport)
@@ -165,12 +165,12 @@ ZMQ_EXPORT int WINAPI mql4zmq_connect (void *s, const char *addr)
 
 ZMQ_EXPORT int WINAPI mql4zmq_send (void *s, zmq_msg_t *msg, int flags)
 {
-	return zmq_send (s, msg, flags);
+	return zmq_sendmsg (s, msg, flags);
 }
 
 ZMQ_EXPORT int WINAPI mql4zmq_recv (void *s, zmq_msg_t *msg, int flags)
 {
-	return zmq_recv(s, msg, flags);
+	return zmq_recvmsg(s, msg, flags);
 }
 
 /******************************************************************************/
@@ -209,14 +209,14 @@ ZMQ_EXPORT const char* WINAPI mql4s_recv (void* socket, int flags)
     zmq_msg_init(&message);
 
 	// Receive the inbound message.
-	if (zmq_recv (socket, &message, flags))
+	if (zmq_recvmsg (socket, &message, flags))
         return (NULL); // No message received
 
 	// Retrive message size.
     size = zmq_msg_size(&message);
 
 	// Initialize variable to hold the message.
-	string = malloc (size + 1);
+	string = (char*) malloc (size + 1);
 
 	// Retrive pointer to message data and store message in variable 'string'
 	memcpy (string, zmq_msg_data (&message), size);
@@ -246,12 +246,12 @@ ZMQ_EXPORT int WINAPI mql4s_send (void *socket, char *text)
     memcpy (zmq_msg_data (&message), text, strlen (text));
 
 	// Stream the message to the specified socket.
-    result = zmq_send (socket, &message, 0);
+	result = zmq_sendmsg (socket, &message, 0);
 
 	// Deallocate the message.
     zmq_msg_close (&message);
 
-	// Return the response of the zmq_send call. 0 is success, -1 is error.
+	// Return the response of the zmq_sendmsg call. 0 is success, -1 is error.
     return (result);
 }
 
@@ -272,11 +272,11 @@ ZMQ_EXPORT int WINAPI mql4s_sendmore (void *socket, char *text)
     memcpy (zmq_msg_data (&message), text, strlen (text));
 
 	// Stream the message to the specified socket.
-    result = zmq_send (socket, &message, ZMQ_SNDMORE);
+    result = zmq_sendmsg (socket, &message, ZMQ_SNDMORE);
 
 	// Deallocate the message.
     zmq_msg_close (&message);
 
-	// Return the response of the zmq_send call. 0 is success, -1 is error.
+	// Return the response of the zmq_sendmsg call. 0 is success, -1 is error.
     return (result);
 }
