@@ -29,7 +29,7 @@
 */
 
 // Include the original libzmq header file.
-#include "../../../include/zmq.h"
+#include "zmq.h"
 
 // Handle DSO symbol visibility. This is already defined in zmq.h, but we set it here again to protect against future changes to Microsoft Visual C++ detection methods.
 #define ZMQ_EXPORT __declspec(dllexport)
