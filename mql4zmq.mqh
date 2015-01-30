@@ -34,7 +34,7 @@ string mql4zmq_strerror(int errnum);
 int mql4zmq_msg_init(int &msg[]);
 int mql4zmq_msg_init_size (int &msg[], int size);
 int mql4zmq_msg_init_data (int &msg[], string data, int size);
-int mql4zmq_msg_close (int $msg[]);
+int mql4zmq_msg_close (int &msg[]);
 int mql4zmq_msg_move (int dest, int src);
 int mql4zmq_msg_copy (int dest, int src);
 string mql4zmq_msg_data (int &msg[]);
